@@ -286,31 +286,40 @@
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="flex space-x-1 md:space-x-8 overflow-x-auto">
                         <button 
+                            onClick={() => setTab('home')}
+                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
+                                ${activeTab === 'home' 
+                                ? 'border-blue-600 text-blue-600' 
+                                : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                        >
+                            <i className="fa-solid fa-house"></i> Accueil
+                        </button>
+                        <button 
                             onClick={() => setTab('uk')}
                             className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
                                 ${activeTab === 'uk' 
                                 ? 'border-blue-600 text-blue-600' 
-                                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                                : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                         >
-                            <i className="fa-solid fa-flag-checkered"></i> Royaume-Uni (Non-UE)
+                            <i className="fa-solid fa-flag-checkered"></i> Royaume-Uni
                         </button>
                         <button 
                             onClick={() => setTab('schengen')}
                             className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
                                 ${activeTab === 'schengen' 
                                 ? 'border-blue-600 text-blue-600' 
-                                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                                : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                         >
-                            <i className="fa-solid fa-circle-nodes"></i> Espace Schengen
+                            <i className="fa-solid fa-circle-nodes"></i> Schengen
                         </button>
                         <button 
                             onClick={() => setTab('strategy')}
                             className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
                                 ${activeTab === 'strategy' 
                                 ? 'border-amber-500 text-amber-600' 
-                                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                                : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                         >
-                            <i className="fa-solid fa-scale-balanced"></i> Comparatif & Recommandations
+                            <i className="fa-solid fa-scale-balanced"></i> Comparatif
                         </button>
                     </div>
                 </div>
