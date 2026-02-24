@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BO'NATURE EXPORT</title>
     
-    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     
-    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
         body { font-family: 'Inter', sans-serif; }
+        
         .timeline-line-center {
             position: absolute;
             left: 50%;
@@ -31,19 +29,12 @@
             background-color: #E2E8F0;
             z-index: 0;
         }
-        .custom-scroll::-webkit-scrollbar {
-            width: 8px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -51,7 +42,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
-
     <div id="root"></div>
 
     <script type="text/babel">
@@ -278,16 +268,142 @@
         ];
 
         // ==========================================
+        // DONNÉES - GLOSSAIRE
+        // ==========================================
+        const glossaryData = [
+            {
+                term: "EORI",
+                fullName: "Economic Operators Registration and Identification",
+                category: "Douane",
+                definition: "Numéro d'immatriculation douanière unique attribué aux entreprises pour interagir avec les autorités douanières de l'UE et du Royaume-Uni. Indispensable pour exporter ou importer.",
+                icon: "fa-id-card",
+                color: "blue"
+            },
+            {
+                term: "REX",
+                fullName: "Registered Exporter System",
+                category: "Douane",
+                definition: "Statut permettant à un exportateur d'auto-certifier l'origine européenne de ses marchandises sur la facture (obligatoire pour les envois de plus de 6000€ vers le UK).",
+                icon: "fa-file-signature",
+                color: "blue"
+            },
+            {
+                term: "IPAFFS",
+                fullName: "Import of Products, Animals, Food and Feed System",
+                category: "Sanitaire",
+                definition: "Système informatique britannique obligatoire pour pré-notifier l'arrivée de produits d'origine animale ou végétale au Royaume-Uni.",
+                icon: "fa-desktop",
+                color: "green"
+            },
+            {
+                term: "PEACH",
+                fullName: "Procedure for Electronic Application for Certificates",
+                category: "Sanitaire",
+                definition: "Ancien système britannique pour les végétaux, progressivement remplacé par IPAFFS.",
+                icon: "fa-seedling",
+                color: "green"
+            },
+            {
+                term: "SPS",
+                fullName: "Sanitaire et Phytosanitaire",
+                category: "Réglementation",
+                definition: "Ensemble des règles et contrôles visant à protéger la santé humaine, animale et végétale (contrôle des denrées, prévention des maladies).",
+                icon: "fa-shield-halved",
+                color: "red"
+            },
+            {
+                term: "EHC",
+                fullName: "Export Health Certificate",
+                category: "Sanitaire",
+                definition: "Certificat sanitaire officiel délivré et signé par un vétérinaire de la DDPP pour autoriser l'exportation de produits d'origine animale.",
+                icon: "fa-notes-medical",
+                color: "green"
+            },
+            {
+                term: "DDPP",
+                fullName: "Direction Départementale de la Protection des Populations",
+                category: "Institution",
+                definition: "Service de l'État français (ex-Services Vétérinaires) chargé de délivrer les certificats sanitaires pour l'export.",
+                icon: "fa-building-shield",
+                color: "slate"
+            },
+            {
+                term: "MRN",
+                fullName: "Movement Reference Number",
+                category: "Douane",
+                definition: "Numéro de suivi unique prouvant qu'une déclaration en douane (export ou import) a bien été enregistrée dans les systèmes informatiques.",
+                icon: "fa-barcode",
+                color: "blue"
+            },
+            {
+                term: "ELO / GMR",
+                fullName: "Enveloppe Logistique / Goods Movement Reference",
+                category: "Transport",
+                definition: "Systèmes de 'Frontière Intelligente'. Codes-barres générés pour le transporteur, regroupant toutes les déclarations douanières d'un camion pour faciliter son passage au ferry ou au tunnel.",
+                icon: "fa-truck-fast",
+                color: "amber"
+            },
+            {
+                term: "BCP",
+                fullName: "Border Control Post",
+                category: "Contrôle",
+                definition: "Poste de Contrôle Frontalier britannique (comme Sevington) où les camions convoqués doivent s'arrêter pour des inspections physiques et documentaires.",
+                icon: "fa-magnifying-glass-location",
+                color: "red"
+            },
+            {
+                term: "SIVEP",
+                fullName: "Service d'Inspection Vétérinaire et Phytosanitaire aux Frontières",
+                category: "Contrôle",
+                definition: "L'équivalent français du BCP, chargé de contrôler les produits d'origine animale ou végétale qui entrent dans l'Union Européenne.",
+                icon: "fa-microscope",
+                color: "red"
+            },
+            {
+                term: "BTOM",
+                fullName: "Border Target Operating Model",
+                category: "Réglementation",
+                definition: "Nouveau modèle douanier et sanitaire post-Brexit du Royaume-Uni, qui classe les produits selon 3 niveaux de risque (faible, moyen, élevé).",
+                icon: "fa-scale-balanced",
+                color: "slate"
+            },
+            {
+                term: "EMEBI",
+                fullName: "État Récapitulatif Mensuel des Échanges de Biens Intra-UE",
+                category: "Fiscalité",
+                definition: "Déclaration statistique (remplaçant la DEB) à fournir aux douanes françaises si les ventes vers l'Union Européenne dépassent un certain seuil.",
+                icon: "fa-chart-pie",
+                color: "blue"
+            },
+            {
+                term: "Transit (T1 / NSTI)",
+                fullName: "Nouveau Système de Transit Informatisé",
+                category: "Transport",
+                definition: "Régime douanier permettant de transporter des marchandises à travers un territoire (ex: la Suisse) en suspendant le paiement des droits et taxes jusqu'à la destination finale.",
+                icon: "fa-route",
+                color: "amber"
+            },
+            {
+                term: "Paquet Hygiène",
+                fullName: "HACCP & Traçabilité",
+                category: "Réglementation",
+                definition: "Socle de base de la législation alimentaire européenne obligatoire pour tous les professionnels de l'agroalimentaire, reconnu au sein de l'UE et de Schengen.",
+                icon: "fa-hand-sparkles",
+                color: "green"
+            }
+        ];
+
+        // ==========================================
         // COMPOSANTS COMMUNS
         // ==========================================
         
         const Navigation = ({ activeTab, setTab }) => (
             <div className="bg-white shadow-sm sticky top-0 z-40 border-b border-slate-200">
                 <div className="max-w-6xl mx-auto px-4">
-                    <div className="flex space-x-1 md:space-x-8 overflow-x-auto">
+                    <div className="flex space-x-1 md:space-x-8 overflow-x-auto custom-scroll">
                         <button 
                             onClick={() => setTab('home')}
-                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
+                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap 
                                 ${activeTab === 'home' 
                                 ? 'border-blue-600 text-blue-600' 
                                 : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -296,7 +412,7 @@
                         </button>
                         <button 
                             onClick={() => setTab('uk')}
-                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
+                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap 
                                 ${activeTab === 'uk' 
                                 ? 'border-blue-600 text-blue-600' 
                                 : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -305,7 +421,7 @@
                         </button>
                         <button 
                             onClick={() => setTab('schengen')}
-                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
+                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap 
                                 ${activeTab === 'schengen' 
                                 ? 'border-blue-600 text-blue-600' 
                                 : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -314,12 +430,21 @@
                         </button>
                         <button 
                             onClick={() => setTab('strategy')}
-                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap
+                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap 
                                 ${activeTab === 'strategy' 
                                 ? 'border-amber-500 text-amber-600' 
                                 : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                         >
                             <i className="fa-solid fa-scale-balanced"></i> Comparatif
+                        </button>
+                        <button 
+                            onClick={() => setTab('glossary')}
+                            className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap 
+                                ${activeTab === 'glossary' 
+                                ? 'border-purple-600 text-purple-600' 
+                                : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                        >
+                            <i className="fa-solid fa-book-open"></i> Glossaire
                         </button>
                     </div>
                 </div>
@@ -332,7 +457,7 @@
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm fade-in" onClick={onClose}>
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden" onClick={e => e.stopPropagation()}>
                         <div className="bg-slate-900 p-8 text-white relative overflow-hidden">
-                             <div className="absolute top-0 right-0 p-32 bg-blue-600 rounded-full blur-3xl opacity-20 -mr-16 -mt-16"></div>
+                            <div className="absolute top-0 right-0 p-32 bg-blue-600 rounded-full blur-3xl opacity-20 -mr-16 -mt-16"></div>
                             <button onClick={onClose} className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center">
                                 <i className="fa-solid fa-xmark text-lg"></i>
                             </button>
@@ -366,9 +491,7 @@
                                     <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center">
                                         <i className="fa-solid fa-magnifying-glass text-blue-600 mr-2"></i> Analyse Réglementaire
                                     </h3>
-                                    <p className="text-sm text-slate-600 leading-relaxed text-justify">
-                                        {data.analysis}
-                                    </p>
+                                    <p className="text-sm text-slate-600 leading-relaxed text-justify">{data.analysis}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-bold text-slate-800 mb-3">Documents Requis</h3>
@@ -382,15 +505,17 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div className="mt-8 bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl flex items-start gap-4">
-                                <div className="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i className="fa-solid fa-triangle-exclamation text-lg"></i>
+                            {data.warning && (
+                                <div className="mt-8 bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl flex items-start gap-4">
+                                    <div className="bg-amber-100 text-amber-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i className="fa-solid fa-triangle-exclamation text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-amber-900 text-sm uppercase tracking-wide mb-1">Point de Vigilance</h4>
+                                        <p className="text-sm text-amber-800 leading-snug">{data.warning}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 className="font-bold text-amber-900 text-sm uppercase tracking-wide mb-1">Point de Vigilance</h4>
-                                    <p className="text-sm text-amber-800 leading-snug">{data.warning}</p>
-                                </div>
-                            </div>
+                            )}
                         </div>
                         <div className="bg-white p-4 border-t border-slate-200 text-center">
                             <button onClick={onClose} className="px-8 py-2 bg-slate-100 text-slate-600 font-bold rounded-full hover:bg-slate-200 transition-colors text-sm">
@@ -401,8 +526,8 @@
                 </div>
             );
         };
-        
-// --- PAGE 0: HOME ---
+
+        // --- PAGE 0: HOME ---
         const HomePage = ({ setTab }) => (
             <div className="animate-fade-in flex-1 bg-slate-50">
                 <div className="relative bg-slate-900 overflow-hidden">
@@ -416,18 +541,16 @@
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Du local à l'international</span>
                         </h1>
                         <p className="text-slate-300 text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-                            Bienvenue sur notre outil d'aide à la décision pour l'export de produits savoyards.
-                            Analysez les réglementations et choisissez la meilleure stratégie.
+                            Bienvenue sur notre outil d'aide à la décision pour l'export de produits savoyards. Analysez les réglementations et choisissez la meilleure stratégie.
                         </p>
                         <button onClick={() => setTab('uk')} className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1">
                             Commencer l'analyse
                         </button>
                     </div>
                 </div>
-
+                
                 <div className="max-w-6xl mx-auto px-4 py-20 -mt-16 relative z-10">
                     <div className="grid md:grid-cols-3 gap-8">
-                        {/* Carte UK */}
                         <div onClick={() => setTab('uk')} className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hover:shadow-2xl transition-all cursor-pointer group hover:-translate-y-2">
                             <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                 <i className="fa-solid fa-flag-checkered"></i>
@@ -440,8 +563,7 @@
                                 Explorer <i className="fa-solid fa-arrow-right"></i>
                             </span>
                         </div>
-
-                        {/* Carte Schengen */}
+                        
                         <div onClick={() => setTab('schengen')} className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hover:shadow-2xl transition-all cursor-pointer group hover:-translate-y-2">
                             <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-3xl text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                                 <i className="fa-solid fa-circle-nodes"></i>
@@ -454,8 +576,7 @@
                                 Explorer <i className="fa-solid fa-arrow-right"></i>
                             </span>
                         </div>
-
-                        {/* Carte Stratégie */}
+                        
                         <div onClick={() => setTab('strategy')} className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hover:shadow-2xl transition-all cursor-pointer group hover:-translate-y-2">
                             <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl text-amber-500 mb-6 group-hover:bg-amber-500 group-hover:text-white transition-colors">
                                 <i className="fa-solid fa-scale-balanced"></i>
@@ -472,14 +593,14 @@
                 </div>
             </div>
         );
-        
+
         // ==========================================
         // PAGE 1: UK
         // ==========================================
         const UKPage = ({ setSelectedStep }) => {
             const [filter, setFilter] = useState('all');
             const [mounted, setMounted] = useState(false);
-
+            
             useEffect(() => {
                 const timer = setTimeout(() => setMounted(true), 300);
                 return () => clearTimeout(timer);
@@ -500,7 +621,6 @@
                 </div>
             );
 
-            // Composant Timeline Item Alterné (Détaillé)
             const DetailedTimelineItem = ({ step, index, onClick }) => {
                 const isLeft = index % 2 === 0;
                 
@@ -511,7 +631,6 @@
                         </div>
                         <h3 className="text-2xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">{step.title}</h3>
                         <p className="text-sm text-slate-500 leading-relaxed max-w-sm font-medium">{step.details}</p>
-                        
                         <button className="mt-4 text-xs font-bold bg-blue-50 text-blue-600 px-4 py-2 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors flex items-center gap-2">
                             Voir l'analyse réglementaire <i className="fa-solid fa-arrow-right"></i>
                         </button>
@@ -556,8 +675,7 @@
                     <div className="relative flex items-center justify-between w-full mb-16 md:mb-24 last:mb-0 group fade-in" onClick={() => onClick(step)}>
                         <div className="w-5/12">{isLeft ? <TextContent /> : <CardContent />}</div>
                         <div className="w-2/12 flex justify-center relative z-10">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-xl border-4 border-slate-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white
-                                ${step.warning ? 'bg-slate-800 text-white' : 'bg-slate-700 text-white'}`}>
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-xl border-4 border-slate-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white ${step.warning ? 'bg-slate-800 text-white' : 'bg-slate-700 text-white'}`}>
                                 {index + 1}
                             </div>
                         </div>
@@ -583,7 +701,7 @@
                             </p>
                         </div>
                     </div>
-
+                    
                     <div className="w-full bg-white border-b border-slate-200 py-12 shadow-sm relative overflow-hidden">
                         <div className="max-w-6xl mx-auto px-4">
                             <div className="text-center mb-10">
@@ -603,25 +721,25 @@
                                     <div className="w-full md:w-24 bg-green-500 rounded-t-xl shadow-lg relative hover:brightness-110 transition-all duration-1000 ease-out cursor-pointer" style={{ height: mounted ? '5%' : '0%' }}>
                                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-100 text-green-800 text-sm font-bold px-3 py-1 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-green-200">~1% (Documentaire)</div>
                                     </div>
-                                    <div className="mt-4 text-center"><span className="block text-lg font-bold text-slate-700">Risque faible</span>
+                                    <div className="mt-4 text-center"><span className="block text-lg font-bold text-slate-700">Risque faible</span></div>
                                 </div>
                                 <div className="relative z-10 flex flex-col items-center group w-1/4 md:w-32 h-full justify-end">
                                     <div className="w-full md:w-24 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-xl shadow-lg relative hover:brightness-110 transition-all duration-1000 ease-out cursor-pointer" style={{ height: mounted ? '30%' : '0%' }}>
                                         <div className="absolute inset-0 opacity-10 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqgOx4Wy4xF27dt0HAGKTE/wtviPNAAAAAElFTkSuQmCC')]"></div>
                                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-yellow-100 text-yellow-800 text-sm font-bold px-3 py-1 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-yellow-200">1% à 30% (Aléatoire)</div>
                                     </div>
-                                    <div className="mt-4 text-center"><span className="block text-lg font-bold text-slate-700">Risque moyen</span>
+                                    <div className="mt-4 text-center"><span className="block text-lg font-bold text-slate-700">Risque moyen</span></div>
                                 </div>
                                 <div className="relative z-10 flex flex-col items-center group w-1/4 md:w-32 h-full justify-end">
                                     <div className="w-full md:w-24 bg-red-600 rounded-t-xl shadow-lg relative hover:brightness-110 transition-all duration-1000 ease-out cursor-pointer" style={{ height: mounted ? '90%' : '0%' }}>
                                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-red-100 text-red-800 text-sm font-bold px-3 py-1 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-red-200">100% (Systématique)</div>
                                     </div>
-                                    <div className="mt-4 text-center"><span className="block text-lg font-bold text-slate-700">Risque élevé</span>
+                                    <div className="mt-4 text-center"><span className="block text-lg font-bold text-slate-700">Risque élevé</span></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                    
                     <div className="max-w-6xl mx-auto px-4 mt-16 mb-20">
                         <div className="grid md:grid-cols-3 gap-6">
                             {ukBtomLevels.map((level, idx) => {
@@ -641,7 +759,7 @@
                             })}
                         </div>
                     </div>
-
+                    
                     <main className="max-w-6xl mx-auto px-4">
                         <div className="text-center mb-10">
                             <h2 className="text-4xl font-bold text-slate-800 mb-4">Séquençage du Flux Documentaire</h2>
@@ -650,20 +768,13 @@
                         </div>
                         <div className="relative py-8 min-h-[500px]">
                             <div className="timeline-line-center hidden md:block"></div>
-                            
                             <div className="hidden md:block">
                                 {filteredData.length > 0 ? (
                                     filteredData.map((step, index) => (
-                                        <DetailedTimelineItem 
-                                            key={step.id} 
-                                            step={step} 
-                                            index={index} 
-                                            onClick={setSelectedStep} 
-                                        />
+                                        <DetailedTimelineItem key={step.id} step={step} index={index} onClick={setSelectedStep} />
                                     ))
                                 ) : (<div className="text-center py-20 text-slate-400 italic">Aucune étape ne correspond à ce filtre.</div>)}
                             </div>
-                            
                             {/* Mobile View (Simplified) */}
                             <div className="md:hidden space-y-8 pl-6 border-l-2 border-slate-200 ml-4">
                                 {filteredData.map((step, index) => (
@@ -703,7 +814,7 @@
                             </p>
                         </div>
                     </div>
-
+                    
                     <div className="max-w-6xl mx-auto px-4 mt-12">
                         <div className="grid md:grid-cols-2 gap-8 mb-16">
                             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl">
@@ -725,7 +836,7 @@
                                 </ul>
                             </div>
                         </div>
-
+                        
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {schengenData.map((item, idx) => (
                                 <div key={idx} onClick={() => setSelectedStep(item)} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer group">
@@ -745,12 +856,11 @@
                                 </div>
                             ))}
                         </div>
-
+                        
                         <div className="mt-16 bg-green-50 rounded-2xl p-8 border border-green-100">
                             <h3 className="text-2xl font-bold text-green-900 mb-4"><i className="fa-solid fa-leaf mr-2"></i> Socle Commun : Hygiène & Sécurité</h3>
                             <p className="text-green-800 mb-4 leading-relaxed">
-                                Que vous exportiez vers l'Allemagne (UE) ou la Suisse (Schengen non-UE), le <strong>Paquet Hygiène</strong> s'applique.
-                                Les entreprises doivent respecter la législation alimentaire européenne (HACCP, Traçabilité).
+                                Que vous exportiez vers l'Allemagne (UE) ou la Suisse (Schengen non-UE), le <strong>Paquet Hygiène</strong> s'applique. Les entreprises doivent respecter la législation alimentaire européenne (HACCP, Traçabilité).
                             </p>
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="bg-white p-4 rounded-lg shadow-sm">
@@ -780,16 +890,15 @@
                             </div>
                             <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
                                 Comparatif et Recommandations<br/>
-                                <span className="text-amber-500">Producteurs Savoie → Restaurateurs</span>
+                                <span className="text-amber-500">Producteurs Savoie ? Restaurateurs</span>
                             </h1>
                             <p className="text-slate-300 text-lg max-w-2xl mx-auto">
                                 Comparaison simple pour choisir le meilleur marché pour vos fromages et charcuteries.
                             </p>
                         </div>
                     </div>
-
+                    
                     <div className="max-w-6xl mx-auto px-4 mt-12">
-                        
                         {/* Tableau Comparatif */}
                         <div className="overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200 mb-12">
                             <table className="w-full text-left border-collapse">
@@ -821,11 +930,10 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        
                         {/* Recommandations */}
                         <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg">
                             <h3 className="text-2xl font-bold text-slate-800 mb-6 text-center">Nos Recommandations pour vos Produits Savoyards</h3>
-                            
                             <div className="grid md:grid-cols-3 gap-8">
                                 <div className="p-6 bg-slate-50 rounded-xl border border-slate-100">
                                     <div className="text-center mb-4">
@@ -834,7 +942,6 @@
                                     <h4 className="font-bold text-center text-slate-800 mb-2">Commencez par l'UE</h4>
                                     <p className="text-sm text-slate-600 text-center">Ciblez les restaurants en Belgique ou en Allemagne. C'est le plus simple. Pas de douane, pas de vétérinaire. Vous faites vos cartons et vous expédiez.</p>
                                 </div>
-
                                 <div className="p-6 bg-slate-50 rounded-xl border border-slate-100">
                                     <div className="text-center mb-4">
                                         <div className="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">2</div>
@@ -842,7 +949,6 @@
                                     <h4 className="font-bold text-center text-slate-800 mb-2">La Suisse en Voisin</h4>
                                     <p className="text-sm text-slate-600 text-center">La Suisse est riche et aime le fromage. C'est une bonne étape intermédiaire. Il faut juste faire une déclaration de douane, mais c'est gérable pour une PME.</p>
                                 </div>
-
                                 <div className="p-6 bg-slate-50 rounded-xl border border-slate-100">
                                     <div className="text-center mb-4">
                                         <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">3</div>
@@ -852,6 +958,109 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- PAGE 4: GLOSSAIRE ---
+        const GlossaryPage = () => {
+            const [searchTerm, setSearchTerm] = useState('');
+
+            // Trier les données par ordre alphabétique et filtrer
+            const filteredGlossary = glossaryData
+                .sort((a, b) => a.term.localeCompare(b.term))
+                .filter(item => 
+                    item.term.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    item.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.definition.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+            const colorClasses = {
+                blue: "bg-blue-50 text-blue-600 border-blue-200",
+                green: "bg-green-50 text-green-600 border-green-200",
+                red: "bg-red-50 text-red-600 border-red-200",
+                amber: "bg-amber-50 text-amber-600 border-amber-200",
+                slate: "bg-slate-100 text-slate-600 border-slate-200",
+            };
+
+            const iconBgClasses = {
+                blue: "bg-blue-100 text-blue-600",
+                green: "bg-green-100 text-green-600",
+                red: "bg-red-100 text-red-600",
+                amber: "bg-amber-100 text-amber-600",
+                slate: "bg-slate-200 text-slate-600",
+            };
+
+            return (
+                <div className="animate-fade-in pb-20">
+                    <div className="bg-slate-900 text-white py-12 px-4 shadow-xl text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-purple-500 via-slate-900 to-black"></div>
+                        
+                        <div className="relative max-w-4xl mx-auto z-10">
+                            <div className="inline-block mb-4 px-4 py-1 rounded-full bg-purple-500/20 border border-purple-500/50 text-purple-200 text-sm font-semibold">
+                                Lexique & Définitions
+                            </div>
+                            <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                                <span className="text-purple-400">Le Glossaire</span> de l'Exporteur
+                            </h1>
+                            <p className="text-slate-300 text-lg max-w-2xl mx-auto mb-8">
+                                Décodez le jargon douanier, sanitaire et logistique pour exporter en toute sérénité.
+                            </p>
+
+                            <div className="relative max-w-lg mx-auto">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i className="fa-solid fa-magnifying-glass text-slate-400"></i>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    placeholder="Rechercher un terme, un acronyme (ex: EORI, IPAFFS)..." 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full pl-11 pr-4 py-3 md:py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white/20 transition-all shadow-inner backdrop-blur-sm"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto px-4 mt-16">
+                        {filteredGlossary.length === 0 ? (
+                            <div className="text-center py-20 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                                <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                    <i className="fa-solid fa-ghost"></i>
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-700 mb-2">Aucun terme trouvé</h3>
+                                <p className="text-slate-500">Essayez une autre recherche pour "{searchTerm}"</p>
+                            </div>
+                        ) : (
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredGlossary.map((item, idx) => (
+                                    <div key={idx} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg hover:-translate-y-1 hover:border-purple-300 transition-all group flex flex-col h-full">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm ${iconBgClasses[item.color]} group-hover:scale-110 transition-transform`}>
+                                                <i className={`fa-solid ${item.icon}`}></i>
+                                            </div>
+                                            <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border ${colorClasses[item.color]}`}>
+                                                {item.category}
+                                            </span>
+                                        </div>
+                                        
+                                        <h3 className="font-bold text-xl text-slate-800 mb-1">{item.term}</h3>
+                                        {item.fullName && (
+                                            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-4 line-clamp-2 min-h-[2rem]">
+                                                {item.fullName}
+                                            </div>
+                                        )}
+                                        
+                                        <div className="w-8 h-1 bg-slate-100 rounded mb-4 group-hover:bg-purple-200 transition-colors"></div>
+                                        
+                                        <p className="text-sm text-slate-600 leading-relaxed flex-grow">
+                                            {item.definition}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             );
@@ -867,19 +1076,20 @@
             return (
                 <div className="min-h-screen pb-20 font-sans bg-slate-50">
                     <Navigation activeTab={activeTab} setTab={setActiveTab} />
-
+                    
                     {activeTab === 'home' && <HomePage setTab={setActiveTab} />}
                     {activeTab === 'uk' && <UKPage setSelectedStep={setSelectedStep} />}
                     {activeTab === 'schengen' && <SchengenPage setSelectedStep={setSelectedStep} />}
                     {activeTab === 'strategy' && <StrategyPage />}
-
+                    {activeTab === 'glossary' && <GlossaryPage />}
+                    
                     <footer className="bg-slate-900 text-slate-400 mt-0 py-12 text-center border-t border-slate-800">
                         <div className="max-w-4xl mx-auto px-4">
                             <p className="font-bold text-white mb-2">Référentiel Réglementaire 2026 - Export Agroalimentaire</p>
                             <p className="text-sm">Projet Étudiant - Cas Entreprise Savoyarde</p>
                         </div>
                     </footer>
-
+                    
                     <Modal data={selectedStep} onClose={() => setSelectedStep(null)} />
                 </div>
             );
