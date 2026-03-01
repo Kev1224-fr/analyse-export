@@ -46,11 +46,10 @@
         // ==========================================
         // DÉTECTEUR DE MOTS CLÉS (GLOSSAIRE)
         // ==========================================
-        const glossaryAcronyms = ["EORI", "REX", "IPAFFS", "PEACH", "SPS", "EHC", "DDPP", "MRN", "GVMS", "GMR", "BCP", "BTOM", "EMEBI", "NSTI", "T1", "HACCP", "Delta IE", "DAE"];
-        
+        const glossaryAcronyms = ["EORI", "REX", "IPAFFS", "SPS", "EHC", "DDPP", "MRN", "GVMS", "GMR", "BCP", "BTOM", "EMEBI", "NSTI", "T1", "HACCP", "Delta IE", "DAE"];
+
         const TextWithGlossaryLinks = ({ text, onNavigate }) => {
             if (!text) return null;
-            // On utilise une regex pour trouver les mots entiers sans casser la casse
             const regex = new RegExp(`\\b(${glossaryAcronyms.join('|')})\\b`, 'gi');
             const parts = text.split(regex);
             
@@ -85,9 +84,9 @@
                 sender: "Entreprise",
                 receiver: "Douane FR / HMRC",
                 details: "Obtention des identifiants douaniers obligatoires pour interagir avec les systèmes UE et UK.",
-                analysis: "Réglementation : Le code des douanes de l'Union (CDU) et le BTOM imposent une double immatriculation. L'exportateur doit avoir un EORI FR (siret) et un numéro REX (Registered Exporter) pour certifier l'origine UE sur la facture (si > 6000€). L'importateur DOIT avoir un EORI GB.",
+                analysis: "Réglementation : Le code des douanes de l'Union (CDU) et le BTOM imposent une double immatriculation. L'exportateur français doit avoir un numéro EORI FR (basé sur le SIRET) et un numéro REX (Registered Exporter) pour certifier l'origine UE sur la facture, ce qui exempte l'importateur de droits de douane. L'importateur britannique DOIT avoir un EORI GB.",
                 docs: ["EORI FR", "EORI GB", "Numéro REX"],
-                warning: "Bloquant : Pas d'EORI GB = Impossible de dédouaner à l'arrivée."
+                warning: "Bloquant : Pas d'EORI GB = Impossible de dédouaner à l'arrivée. Pas de REX = Droits de douane applicables."
             },
             {
                 id: 1,
@@ -98,10 +97,10 @@
                 actor: "Exportateur / Importateur",
                 sender: "Opérateur",
                 receiver: "DEFRA (UK)",
-                details: "Déclaration d'intention d'importation dans le système britannique unique (le système historique PEACH étant désormais fermé).",
+                details: "Déclaration d'intention d'importation dans le système britannique unique.",
                 analysis: "Depuis la pleine application du BTOM, l'importateur britannique doit obligatoirement utiliser le système IPAFFS pour pré-notifier l'arrivée de marchandises sanitaires ou phytosanitaires. C'est le point d'entrée unique de la DEFRA.",
                 docs: ["Création compte IPAFFS"],
-                warning: "Attention : La responsabilité de la saisie IPAFFS incombe à l'importateur britannique."
+                warning: "Attention : La responsabilité de la saisie IPAFFS incombe à l'importateur britannique, mais l'exportateur doit fournir les informations exactes."
             },
             {
                 id: 2,
@@ -112,10 +111,10 @@
                 actor: "Vétérinaire Officiel (DDPP)",
                 sender: "DDPP",
                 receiver: "Exportateur",
-                details: "Inspection et émission du certificat sanitaire officiel pour les produits animaux (Fromages, Viandes).",
-                analysis: "Réglementation SPS : Pour les produits classés à risque moyen ou élevé par le BTOM, un vétérinaire officiel doit certifier la marchandise (EHC). Ce document atteste du respect des standards britanniques.",
+                details: "Inspection et émission du certificat sanitaire officiel pour les produits d'origine animale (Fromages, Viandes).",
+                analysis: "Réglementation SPS : Pour les produits classés à risque moyen ou élevé par le BTOM, un vétérinaire officiel de la DDPP doit certifier la marchandise (EHC). Ce document atteste du respect des standards britanniques et doit être signé avant le départ.",
                 docs: ["Certificat Sanitaire (EHC)", "Attestation NIMP 15 (Palettes)"],
-                warning: "Bloquant : Pas de signature vétérinaire officielle = Refoulement immédiat à la frontière."
+                warning: "Bloquant : Pas de signature vétérinaire officielle (TRACES NT) = Refoulement immédiat à la frontière."
             },
             {
                 id: 3,
@@ -127,9 +126,9 @@
                 sender: "Importateur",
                 receiver: "DEFRA (UK)",
                 details: "Validation de la notification d'importation avec les documents définitifs.",
-                analysis: "L'importateur doit finaliser sa notification au minimum 4h avant l'arrivée (flux RoRo) ou 24h avant pour le maritime. Il doit y joindre la version PDF du certificat sanitaire (EHC) signé en France.",
+                analysis: "L'importateur doit finaliser sa notification au minimum 4h avant l'arrivée (flux RoRo) ou 24h avant pour le maritime. Il doit y joindre la version numérique du certificat sanitaire (EHC) signé en France.",
                 docs: ["Réf. Notification IPAFFS complète"],
-                warning: "Vigilance : Le poids net déclaré dans IPAFFS doit correspondre exactement au Certificat EHC."
+                warning: "Vigilance : Le poids net et les numéros de lot déclarés dans IPAFFS doivent correspondre exactement au Certificat EHC."
             },
             {
                 id: 4,
@@ -141,7 +140,7 @@
                 sender: "RDE",
                 receiver: "Delta IE / CDS",
                 details: "Dépôt des déclarations fiscales de sortie (France) et d'entrée (Royaume-Uni).",
-                analysis: "Flux 'Pre-lodged' : La frontière intelligente exige que les déclarations soient validées AVANT l'arrivée du camion au port. L'export se fait via le système français Delta IE (MRN Export) et l'import via le système britannique CDS (MRN Import).",
+                analysis: "Flux 'Pre-lodged' : La frontière intelligente exige que les déclarations soient validées AVANT l'arrivée du camion au port. L'export se fait via le système français Delta IE (générant un MRN Export) et l'import via le système britannique CDS (MRN Import).",
                 docs: ["MRN Export (FR)", "MRN Import (UK)"],
                 warning: "Bloquant : L'absence de MRN empêche la création des enveloppes logistiques de traversée."
             },
@@ -155,9 +154,9 @@
                 sender: "Chauffeur",
                 receiver: "Ferry / Tunnel",
                 details: "Appairage des données douanières avec la plaque d'immatriculation du camion.",
-                analysis: "Smart Border : L'ère du papier au guichet est révolue. Le système GVMS génère un GMR (côté UK) qui consolide les déclarations d'importation. Le chauffeur présente ces codes pour embarquer.",
-                docs: ["Code-barres ELO", "GMR (UK)"],
-                warning: "Logistique : Le transporteur ne peut pas embarquer sans ces codes-barres valides."
+                analysis: "Smart Border : L'ère du papier au guichet est révolue. Le système britannique GVMS génère un GMR qui consolide les déclarations d'importation. Le chauffeur présente ces codes-barres pour avoir le droit d'embarquer sur le ferry ou le Shuttle.",
+                docs: ["Code-barres ELO (FR)", "GMR (UK)"],
+                warning: "Logistique : Le transporteur sera refusé à l'embarquement sans ces codes valides."
             },
             {
                 id: 6,
@@ -169,9 +168,9 @@
                 sender: "Système GVMS",
                 receiver: "Chauffeur",
                 details: "Statut délivré pendant la traversée maritime ou ferroviaire : Libéré ou Contrôle BCP.",
-                analysis: "Processus BTOM : Si le système indique un contrôle sanitaire, le camion a l'obligation légale de se rendre au BCP (Border Control Post). Une inspection documentaire et physique sera effectuée selon le taux de risque.",
-                docs: ["Statut Sortie (Écran bord)"],
-                warning: "Pénal : Ne pas s'arrêter à un BCP alors qu'on y est convoqué constitue une infraction grave."
+                analysis: "Processus BTOM : Pendant la traversée, l'algorithme britannique cible les camions. Si le système indique un contrôle sanitaire ou douanier, le camion a l'obligation légale de se rendre au BCP (Border Control Post) à l'arrivée (ex: Sevington).",
+                docs: ["Statut Sortie (Écran de bord du chauffeur)"],
+                warning: "Pénal : Ne pas se rendre à un BCP alors que le GMR l'exige constitue une infraction grave menant à des sanctions financières."
             }
         ];
 
@@ -180,63 +179,63 @@
                 level: "Risque Faible (Low Risk)",
                 icon: "fa-seedling",
                 color: "green",
-                products: "Conserves, Pâtes, Biscuits, Fruits & Légumes (majorité).",
-                requirements: ["Facture Commerciale", "Pas de Certificat Sanitaire (EHC)", "Exemption IPAFFS (généralement)"],
-                change: "Avantage : Logistique fluide et formalités réduites."
+                products: "Produits transformés, Conserves, Pâtes, Biscuits.",
+                requirements: ["Facture Commerciale avec mention REX", "Pas de Certificat Sanitaire (EHC)", "Exemption IPAFFS (le plus souvent)"],
+                change: "Avantage : Logistique fluide et formalités réduites pour l'épicerie."
             },
             {
                 level: "Risque Moyen (Medium Risk)",
                 icon: "fa-cheese",
                 color: "yellow",
-                products: "Viandes, Fromages au lait cru, Lait, Charcuterie.",
-                requirements: ["Certificat Sanitaire (EHC) obligatoire", "Pré-notification IPAFFS", "Contrôles physiques BCP (1-30%)"],
-                change: "Contrainte : Coûts vétérinaires et risque de retard."
+                products: "Viandes fraîches, Fromages au lait cru, Charcuterie.",
+                requirements: ["Certificat Sanitaire (EHC) officiel obligatoire", "Pré-notification IPAFFS par l'importateur", "Contrôles physiques au BCP (1 à 30%)"],
+                change: "Contrainte : Coûts vétérinaires (DDPP) et délais supplémentaires."
             },
             {
                 level: "Risque Élevé (High Risk)",
                 icon: "fa-cow",
                 color: "red",
                 products: "Animaux vivants, Végétaux destinés à la plantation.",
-                requirements: ["Certificat Sanitaire Intégral", "Notification IPAFFS stricte", "Contrôle physique au BCP quasi-systématique"],
-                change: "Critique : Maîtrise totale de la chaîne requise."
+                requirements: ["Certificat Sanitaire Intégral", "Notification IPAFFS stricte", "Contrôle physique au BCP systématique (100%)"],
+                change: "Critique : Exige une chaîne logistique hautement spécialisée."
             }
         ];
 
         // ==========================================
-        // DONNÉES - SCHENGEN
+        // DONNÉES - MARCHÉ UNIQUE & EUROPE
         // ==========================================
-        const schengenData = [
+        const europeData = [
             {
                 id: 0,
                 type: "ue",
-                category: "UNION EUROPÉENNE",
-                title: "Vente Intracommunautaire",
-                details: "Livrer en Allemagne ou en Italie s'apparente à une livraison sur le territoire national.",
-                analysis: "L'Union Douanière implique l'absence de droits de douane et de frontières physiques. Le principe de reconnaissance mutuelle garantit que les normes sanitaires françaises (Paquet Hygiène) sont valables dans toute l'UE.",
-                docs: ["Facture avec mention TVA intracommunautaire", "CMR (Lettre de voiture)"],
-                warning: "Attention à la conformité de l'étiquetage (langue du pays de destination).",
+                category: "UNION DOUANIÈRE (UE)",
+                title: "Vente Intracommunautaire (Le Marché Unique)",
+                details: "Livrer en Allemagne, Italie ou Espagne est administrativement similaire à une livraison nationale.",
+                analysis: "Le Marché Unique et l'Union Douanière impliquent l'absence totale de droits de douane et de frontières physiques entre les 27 pays membres. De plus, le principe de reconnaissance mutuelle garantit que les normes sanitaires françaises (Paquet Hygiène, HACCP) sont valables dans toute l'UE sans contrôles supplémentaires.",
+                docs: ["Facture avec mention de la TVA intracommunautaire", "CMR (Lettre de voiture)"],
+                warning: "Attention à la conformité de l'étiquetage (il doit être dans la langue du pays de destination) et à la gestion de la TVA.",
                 icon: "fa-flag-eu"
             },
             {
                 id: 1,
                 type: "ue",
-                category: "ADMINISTRATIF",
-                title: "Déclaration EMEBI",
-                details: "Obligation déclarative statistique pour le suivi des échanges intra-UE.",
-                analysis: "Les entreprises dépassant le seuil d'expédition (actuellement 460 000 €/an en France) doivent soumettre mensuellement l'État Récapitulatif Mensuel des Échanges de Biens Intra-UE (EMEBI), qui a remplacé la DEB, ainsi qu'un état récapitulatif TVA.",
-                docs: ["Déclaration EMEBI mensuelle en ligne"],
-                warning: "Uniquement obligatoire si les seuils de chiffre d'affaires sont franchis.",
+                category: "ADMINISTRATIF (UE)",
+                title: "Déclaration Statistique (EMEBI)",
+                details: "L'unique obligation déclarative pour le suivi des échanges intra-UE.",
+                analysis: "Bien qu'il n'y ait pas de douane, l'État a besoin de statistiques. Les entreprises dépassant le seuil d'expédition (actuellement 460 000 €/an en France) doivent soumettre mensuellement l'EMEBI (État Récapitulatif Mensuel des Échanges de Biens Intra-UE, ex-DEB), ainsi qu'un état récapitulatif TVA pour l'administration fiscale.",
+                docs: ["Déclaration EMEBI mensuelle (portail douane.gouv.fr)"],
+                warning: "Uniquement obligatoire si les seuils de chiffre d'affaires annuels sont franchis.",
                 icon: "fa-file-invoice"
             },
             {
                 id: 2,
                 type: "hors-ue",
-                category: "SCHENGEN HORS-UE",
-                title: "Suisse, Norvège, Islande...",
-                details: "Ces pays font partie de l'espace Schengen (personnes) mais sont exclus de l'Union Douanière (marchandises).",
-                analysis: "C'est le piège classique à l'export. On peut passer la frontière suisse sans contrôle d'identité, mais un camion de marchandises doit obligatoirement s'arrêter. Toute exportation vers la Suisse, la Norvège, l'Islande ou le Liechtenstein nécessite une déclaration d'exportation en douane (DAE). Des droits de douane, souvent basés sur le poids brut, s'appliquent à l'arrivée.",
-                docs: ["Facture Export HT", "Déclaration Export (Delta IE)"],
-                warning: "Anticipation indispensable pour fluidifier le passage aux points de douane fret.",
+                category: "AELE & PAYS TIERS EUROPÉENS",
+                title: "Le piège Suisse, Norvège, Islande",
+                details: "Ces pays appliquent la libre circulation des personnes (Schengen) mais SONT EXCLUS de l'Union Douanière pour les marchandises.",
+                analysis: "C'est l'erreur classique du débutant à l'export. On peut passer la frontière suisse avec sa carte d'identité sans s'arrêter, mais un camion de marchandises (fret) y est strictement interdit sans formalités. Toute exportation vers la Suisse ou la Norvège nécessite un dédouanement complet (DAE) et le paiement de droits de douane (souvent calculés au poids brut en Suisse).",
+                docs: ["Facture Export (Hors Taxes)", "Déclaration d'Exportation (Delta IE)"],
+                warning: "Ces pays sont des Pays Tiers. Le processus douanier est quasi-similaire à une expédition vers l'Asie ou les USA.",
                 icon: "fa-mountain"
             },
             {
@@ -244,10 +243,10 @@
                 type: "hors-ue",
                 category: "TRANSIT LOGISTIQUE",
                 title: "Régime de Transit (NSTI / T1)",
-                details: "Procédure douanière permettant de suspendre les droits et taxes pendant le transport.",
-                analysis: "Pour expédier de la marchandise dans un pays non-UE sans s'arrêter à la douane frontalière, ou pour la traverser (vers l'Italie via la Suisse), l'exportateur émet un T1 via le système NSTI. Le camion dédouane ainsi directement à destination chez le client ou dans un bureau de douane intérieur.",
-                docs: ["Document de Transit (MRN)"],
-                warning: "Nécessite une garantie financière ou l'utilisation d'un commissionnaire en douane.",
+                details: "Procédure permettant de traverser un pays tiers (ex: la Suisse) sans y payer les taxes.",
+                analysis: "Si vous expédiez une marchandise depuis la France vers l'Italie (UE à UE), mais que le camion traverse la Suisse (Pays Tiers), il faut suspendre les droits de douane. L'exportateur ou le transporteur émet un document T1 via le système NSTI. Le camion traverse la Suisse sous douane et 'apure' son T1 en rentrant en Italie.",
+                docs: ["Document de Transit T1 (avec MRN)"],
+                warning: "L'émission d'un T1 nécessite une garantie financière bloquée en douane. On passe généralement par un commissionnaire en douane (RDE).",
                 icon: "fa-truck-fast"
             }
         ];
@@ -257,36 +256,36 @@
         // ==========================================
         const strategyData = [
             {
-                zone: "Espace Schengen (UE)",
-                countries: "Allemagne, Italie, Benelux...",
+                zone: "Marché Unique (Union Européenne)",
+                countries: "Allemagne, Italie, Espagne, Benelux...",
                 difficulty: "Faible",
                 cost: "Faible",
                 time: "Fluide (J+1 / J+2)",
-                details: "Marché domestique étendu sans friction.",
-                pros: ["Absence de formalités douanières", "Harmonisation sanitaire (Paquet Hygiène)", "Coûts logistiques maîtrisés"],
-                cons: ["Concurrence européenne intense", "Nécessité d'adapter le packaging/langue"],
+                details: "Extension naturelle du marché domestique sans friction douanière.",
+                pros: ["Aucune formalité douanière", "Harmonisation sanitaire stricte (HACCP)", "Coûts logistiques maîtrisés", "Pas de risque de blocage aux frontières"],
+                cons: ["Concurrence européenne très intense", "Nécessité absolue d'adapter l'étiquetage et le packaging (langues)"],
                 color: "green"
             },
             {
-                zone: "Espace Schengen (Hors-UE)",
+                zone: "Pays Tiers Européens (AELE)",
                 countries: "Suisse, Norvège, Islande",
                 difficulty: "Modérée",
                 cost: "Moyen",
-                time: "Moyen (Arrêt frontière)",
-                details: "Marché limitrophe à fort potentiel mais barriéré.",
-                pros: ["Pouvoir d'achat attractif", "Appétence pour le terroir français", "Proximité géographique réduisant l'empreinte carbone"],
-                cons: ["Complexité douanière (DAE, T1)", "Droits de douane (taxes au poids) impactant la marge"],
+                time: "Moyen (Arrêt obligatoire en douane)",
+                details: "Marché limitrophe à fort potentiel mais protégé par des barrières tarifaires.",
+                pros: ["Pouvoir d'achat très attractif", "Forte appétence pour l'épicerie fine et le terroir français", "Proximité limitant les coûts de transport"],
+                cons: ["Dédouanement obligatoire (DAE, T1)", "Droits de douane applicables impactant le prix de vente final"],
                 color: "yellow"
             },
             {
-                zone: "Pays Tiers (BTOM)",
+                zone: "Grand Export / Post-Brexit (BTOM)",
                 countries: "Royaume-Uni",
                 difficulty: "Élevée",
                 cost: "Élevé",
                 time: "Lent & Incertain",
-                details: "Marché complexe post-Brexit exigeant une solide infrastructure.",
-                pros: ["Volume de marché important", "Demande forte pour l'épicerie fine / fromages"],
-                cons: ["Coûts fixes SPS rédhibitoires pour les petits envois", "Risque logistique (BCP)", "Charge administrative lourde (IPAFFS, EHC)"],
+                details: "Marché devenu complexe exigeant une solide infrastructure administrative et logistique.",
+                pros: ["Volume de marché très important", "Demande historique et constante pour la gastronomie française"],
+                cons: ["Coûts fixes vétérinaires (SPS) rédhibitoires pour les petits envois", "Risque d'inspection physique (BCP)", "Charge administrative quotidienne lourde (IPAFFS)"],
                 color: "red"
             }
         ];
@@ -295,24 +294,23 @@
         // DONNÉES - GLOSSAIRE
         // ==========================================
         const glossaryData = [
-            { term: "EORI", fullName: "Economic Operators Registration and Identification", category: "Douane", definition: "Numéro d'immatriculation douanière unique attribué aux entreprises pour interagir avec les autorités douanières de l'UE et du Royaume-Uni. Indispensable pour exporter.", icon: "fa-id-card", color: "blue" },
-            { term: "REX", fullName: "Registered Exporter System", category: "Douane", definition: "Statut permettant à un exportateur d'auto-certifier l'origine européenne de ses marchandises sur la facture.", icon: "fa-file-signature", color: "blue" },
-            { term: "IPAFFS", fullName: "Import of Products, Animals, Food and Feed System", category: "Sanitaire", definition: "Système informatique britannique unique obligatoire pour pré-notifier l'arrivée de produits d'origine animale ou végétale au UK.", icon: "fa-desktop", color: "green" },
-            { term: "PEACH", fullName: "Procedure for Electronic Application for Certificates", category: "Sanitaire", definition: "Système britannique historique pour les végétaux, définitivement remplacé par IPAFFS en 2024. Terme obsolète.", icon: "fa-seedling-slash", color: "slate" },
-            { term: "SPS", fullName: "Sanitaire et Phytosanitaire", category: "Réglementation", definition: "Ensemble des règles et contrôles visant à protéger la santé humaine, animale et végétale lors d'échanges internationaux.", icon: "fa-shield-halved", color: "red" },
-            { term: "EHC", fullName: "Export Health Certificate", category: "Sanitaire", definition: "Certificat sanitaire officiel délivré et signé par un vétérinaire de la DDPP pour autoriser l'exportation de produits animaux vers des pays tiers.", icon: "fa-notes-medical", color: "green" },
-            { term: "DDPP", fullName: "Direction Départementale de la Protection des Populations", category: "Institution", definition: "Service de l'État français (services vétérinaires) chargé d'inspecter et délivrer les certificats sanitaires pour l'export.", icon: "fa-building-shield", color: "slate" },
-            { term: "MRN", fullName: "Movement Reference Number", category: "Douane", definition: "Numéro de suivi douanier unique (code-barres) prouvant qu'une déclaration a été enregistrée.", icon: "fa-barcode", color: "blue" },
-            { term: "GVMS", fullName: "Goods Vehicle Movement Service", category: "Transport", definition: "Système informatique douanier du Royaume-Uni.", icon: "fa-server", color: "amber" },
-            { term: "GMR", fullName: "Goods Movement Reference", category: "Transport", definition: "Code-barres unique généré par le GVMS regroupant toutes les déclarations d'un camion pour l'embarquement.", icon: "fa-truck-fast", color: "amber" },
-            { term: "BCP", fullName: "Border Control Post", category: "Contrôle", definition: "Poste de Contrôle Frontalier britannique (ex: Sevington) où les camions sont inspectés physiquement.", icon: "fa-magnifying-glass-location", color: "red" },
-            { term: "BTOM", fullName: "Border Target Operating Model", category: "Réglementation", definition: "Modèle douanier et sanitaire post-Brexit en vigueur au UK, qui classe les produits selon 3 niveaux de risque pour cibler les contrôles.", icon: "fa-scale-balanced", color: "slate" },
-            { term: "EMEBI", fullName: "État Récapitulatif Mensuel des Échanges de Biens Intra-UE", category: "Fiscalité", definition: "Déclaration statistique obligatoire (remplaçant la DEB) à fournir mensuellement aux douanes françaises pour les flux au sein de l'UE.", icon: "fa-chart-pie", color: "blue" },
-            { term: "NSTI", fullName: "Nouveau Système de Transit Informatisé", category: "Douane", definition: "Système européen de gestion des déclarations de transit.", icon: "fa-network-wired", color: "blue" },
-            { term: "T1", fullName: "Document de Transit Externe", category: "Transport", definition: "Régime permettant de traverser une frontière en suspendant le paiement des taxes.", icon: "fa-route", color: "amber" },
-            { term: "HACCP", fullName: "Hazard Analysis Critical Control Point", category: "Réglementation", definition: "Législation alimentaire européenne (Paquet Hygiène) reconnue mutuellement au sein de l'UE.", icon: "fa-hand-sparkles", color: "green" },
-            { term: "Delta IE", fullName: "Delta Import-Export", category: "Douane", definition: "Système informatique des douanes françaises pour le dédouanement (remplace Delta G).", icon: "fa-laptop-code", color: "blue" },
-            { term: "DAE", fullName: "Document d'Accompagnement Export", category: "Douane", definition: "Preuve papier ou numérique que la marchandise a bien été déclarée à l'exportation.", icon: "fa-file-export", color: "blue" }
+            { term: "EORI", fullName: "Economic Operators Registration and Identification", category: "Douane", definition: "Numéro d'immatriculation douanière unique attribué aux entreprises. Indispensable pour toute opération d'import/export hors de l'UE.", icon: "fa-id-card", color: "blue" },
+            { term: "REX", fullName: "Registered Exporter System", category: "Douane", definition: "Statut permettant à un exportateur d'auto-certifier l'origine préférentielle de ses marchandises sur la facture, permettant à son client d'être exonéré de droits de douane.", icon: "fa-file-signature", color: "blue" },
+            { term: "IPAFFS", fullName: "Import of Products, Animals, Food and Feed System", category: "Sanitaire", definition: "Système informatique britannique obligatoire pour pré-notifier l'arrivée de produits d'origine animale ou végétale au Royaume-Uni.", icon: "fa-desktop", color: "green" },
+            { term: "SPS", fullName: "Sanitaire et Phytosanitaire", category: "Réglementation", definition: "Ensemble des règles et contrôles visant à protéger la santé humaine, animale et végétale lors des échanges internationaux.", icon: "fa-shield-halved", color: "red" },
+            { term: "EHC", fullName: "Export Health Certificate", category: "Sanitaire", definition: "Certificat sanitaire officiel délivré et signé par un vétérinaire de l'État (DDPP) pour autoriser l'exportation de produits animaux vers des pays tiers.", icon: "fa-notes-medical", color: "green" },
+            { term: "DDPP", fullName: "Direction Départementale de la Protection des Populations", category: "Institution", definition: "Service de l'État français (incluant les services vétérinaires) chargé d'inspecter et de délivrer les certificats sanitaires pour l'exportation.", icon: "fa-building-shield", color: "slate" },
+            { term: "MRN", fullName: "Movement Reference Number", category: "Douane", definition: "Numéro de suivi douanier unique (souvent sous forme de code-barres) prouvant qu'une déclaration a été validée par les autorités.", icon: "fa-barcode", color: "blue" },
+            { term: "GVMS", fullName: "Goods Vehicle Movement Service", category: "Transport", definition: "Système informatique douanier du Royaume-Uni gérant les flux logistiques aux frontières intelligentes.", icon: "fa-server", color: "amber" },
+            { term: "GMR", fullName: "Goods Movement Reference", category: "Transport", definition: "Code-barres unique généré par le GVMS regroupant toutes les déclarations d'un camion. Sésame obligatoire pour embarquer sur le ferry/tunnel.", icon: "fa-truck-fast", color: "amber" },
+            { term: "BCP", fullName: "Border Control Post", category: "Contrôle", definition: "Poste de Contrôle Frontalier britannique (ex: Sevington) où les camions sont déviés pour des inspections documentaires et physiques.", icon: "fa-magnifying-glass-location", color: "red" },
+            { term: "BTOM", fullName: "Border Target Operating Model", category: "Réglementation", definition: "Le nouveau modèle douanier et sanitaire post-Brexit en vigueur au UK, qui classe les produits alimentaires selon 3 niveaux de risque.", icon: "fa-scale-balanced", color: "slate" },
+            { term: "EMEBI", fullName: "État Récapitulatif Mensuel des Échanges de Biens Intra-UE", category: "Fiscalité", definition: "Déclaration statistique obligatoire (qui a remplacé la DEB) à fournir aux douanes françaises pour le suivi des expéditions au sein de l'Union Européenne.", icon: "fa-chart-pie", color: "blue" },
+            { term: "NSTI", fullName: "Nouveau Système de Transit Informatisé", category: "Douane", definition: "Système informatique européen permettant la gestion et le suivi des déclarations de transit douanier.", icon: "fa-network-wired", color: "blue" },
+            { term: "T1", fullName: "Document de Transit Externe", category: "Transport", definition: "Régime douanier permettant à une marchandise de traverser un territoire (ou d'y circuler avant dédouanement) en suspendant le paiement des droits et taxes.", icon: "fa-route", color: "amber" },
+            { term: "HACCP", fullName: "Hazard Analysis Critical Control Point", category: "Réglementation", definition: "Méthode de maîtrise de la sécurité sanitaire des denrées alimentaires, socle de la réglementation européenne (Paquet Hygiène).", icon: "fa-hand-sparkles", color: "green" },
+            { term: "Delta IE", fullName: "Delta Import-Export", category: "Douane", definition: "Le nouveau système informatique des douanes françaises pour le dédouanement (remplaçant l'ancien système Delta G).", icon: "fa-laptop-code", color: "blue" },
+            { term: "DAE", fullName: "Document d'Accompagnement Export", category: "Douane", definition: "Document prouvant que la marchandise a bien été déclarée en douane pour quitter le territoire de l'Union Européenne.", icon: "fa-file-export", color: "blue" }
         ];
 
         // ==========================================
@@ -326,16 +324,15 @@
                         <button onClick={() => setTab('home')} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'home' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
                             <i className="fa-solid fa-house"></i> Accueil
                         </button>
-                        <button onClick={() => setTab('uk')} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'uk' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
-                            <i className="fa-solid fa-flag-checkered"></i> Royaume-Uni
+                        <button onClick={() => setTab('europe')} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'europe' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
+                            <i className="fa-solid fa-circle-nodes"></i> Marché Unique & UE
                         </button>
-                        <button onClick={() => setTab('schengen')} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'schengen' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
-                            <i className="fa-solid fa-circle-nodes"></i> Schengen & UE
+                        <button onClick={() => setTab('uk')} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'uk' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
+                            <i className="fa-solid fa-flag-checkered"></i> Royaume-Uni (BTOM)
                         </button>
                         <button onClick={() => setTab('strategy')} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'strategy' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
-                            <i className="fa-solid fa-scale-balanced"></i> Recommandations
+                            <i className="fa-solid fa-scale-balanced"></i> Synthèse Stratégique
                         </button>
-                        {/* On passe "true" à setTab pour réinitialiser la recherche du glossaire si on clique sur l'onglet manuellement */}
                         <button onClick={() => setTab('glossary', true)} className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'glossary' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
                             <i className="fa-solid fa-book-open"></i> Glossaire
                         </button>
@@ -356,7 +353,7 @@
                             </button>
                             <div className="relative z-10">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <span className="bg-blue-600 px-3 py-1 rounded-full text-xs font-bold tracking-wider shadow-sm">{data.time || "FOCUS"}</span>
+                                    <span className="bg-blue-600 px-3 py-1 rounded-full text-xs font-bold tracking-wider shadow-sm">{data.time || "FOCUS RÉGLEMENTAIRE"}</span>
                                     <span className="text-slate-300 text-xs font-bold uppercase tracking-wider">{data.category}</span>
                                 </div>
                                 <h2 className="text-3xl font-bold mb-2">
@@ -439,46 +436,47 @@
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-black opacity-80"></div>
                     <div className="relative max-w-5xl mx-auto px-4 py-24 text-center">
                         <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-blue-200 text-sm font-semibold backdrop-blur-sm">
-                            Projet Étudiant - Synthèse 2026
+                            Mission de Conseil - Analyse Réglementaire 2026
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                            Stratégie & Réglementation Export<br/>
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Du terroir savoyard à l'international</span>
+                            Stratégie Export Agroalimentaire<br/>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">UE vs Royaume-Uni</span>
                         </h1>
                         <p className="text-slate-300 text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-                            Outil d'aide à la décision conçu pour démythifier les formalités douanières et sanitaires, de l'espace Schengen aux contraintes du marché britannique post-Brexit.
+                            Outil d'aide à la décision conçu pour la startup Bo'Nature : cartographie des exigences douanières, sanitaires et logistiques entre le Marché Unique et le Royaume-Uni post-Brexit.
                         </p>
                         <button onClick={() => setTab('strategy')} className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1">
-                            Découvrir nos recommandations
+                            Voir la synthèse comparative
                         </button>
                     </div>
                 </div>
                 
                 <div className="max-w-6xl mx-auto px-4 py-20 -mt-16 relative z-10">
                     <div className="grid md:grid-cols-3 gap-8">
+                        
+                        <div onClick={() => setTab('europe')} className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hover:shadow-2xl transition-all cursor-pointer group hover:-translate-y-2">
+                            <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-3xl text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <i className="fa-solid fa-circle-nodes"></i>
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Marché Unique & Europe</h3>
+                            <p className="text-slate-500 leading-relaxed mb-6">
+                                Comprendre l'Union Douanière européenne et déjouer le piège réglementaire des pays de l'AELE (Suisse, Norvège).
+                            </p>
+                            <span className="text-emerald-600 font-bold flex items-center gap-2 group-hover:gap-3 transition-all">
+                                Explorer la zone UE <i className="fa-solid fa-arrow-right"></i>
+                            </span>
+                        </div>
+
                         <div onClick={() => setTab('uk')} className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hover:shadow-2xl transition-all cursor-pointer group hover:-translate-y-2">
                             <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                 <i className="fa-solid fa-flag-checkered"></i>
                             </div>
                             <h3 className="text-2xl font-bold text-slate-800 mb-3">Royaume-Uni (BTOM)</h3>
                             <p className="text-slate-500 leading-relaxed mb-6">
-                                Analyse du séquençage logistique et documentaire complexe : SPS, douanes, déclarations IPAFFS et certificats EHC.
+                                Analyse pas-à-pas du séquençage douanier et sanitaire britannique : IPAFFS, certificats EHC et contrôles aux frontières intelligentes.
                             </p>
                             <span className="text-blue-600 font-bold flex items-center gap-2 group-hover:gap-3 transition-all">
-                                Analyser le processus <i className="fa-solid fa-arrow-right"></i>
-                            </span>
-                        </div>
-                        
-                        <div onClick={() => setTab('schengen')} className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hover:shadow-2xl transition-all cursor-pointer group hover:-translate-y-2">
-                            <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-3xl text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                                <i className="fa-solid fa-circle-nodes"></i>
-                            </div>
-                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Schengen & UE</h3>
-                            <p className="text-slate-500 leading-relaxed mb-6">
-                                Maîtriser la distinction juridique fondamentale entre marché intérieur (UE) et douanes des pays tiers (Suisse, Norvège...).
-                            </p>
-                            <span className="text-emerald-600 font-bold flex items-center gap-2 group-hover:gap-3 transition-all">
-                                Explorer la zone <i className="fa-solid fa-arrow-right"></i>
+                                Analyser le processus UK <i className="fa-solid fa-arrow-right"></i>
                             </span>
                         </div>
                         
@@ -486,9 +484,9 @@
                             <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl text-amber-500 mb-6 group-hover:bg-amber-500 group-hover:text-white transition-colors">
                                 <i className="fa-solid fa-scale-balanced"></i>
                             </div>
-                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Recommandations</h3>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Synthèse Stratégique</h3>
                             <p className="text-slate-500 leading-relaxed mb-6">
-                                Matrice de décision stratégique et préconisations de développement à l'export pour une PME savoyarde.
+                                Matrice de décision comparant la complexité administrative, les coûts et préconisations pour le développement commercial.
                             </p>
                             <span className="text-amber-500 font-bold flex items-center gap-2 group-hover:gap-3 transition-all">
                                 Consulter la synthèse <i className="fa-solid fa-arrow-right"></i>
@@ -526,6 +524,7 @@
 
             const DetailedTimelineItem = ({ step, index }) => {
                 const isLeft = index % 2 === 0;
+
                 const TextContent = () => (
                     <div className={`flex flex-col justify-center ${isLeft ? 'items-end text-right pr-12' : 'items-start text-left pl-12'}`}>
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
@@ -538,10 +537,11 @@
                             <TextWithGlossaryLinks text={step.details} onNavigate={onNavigateGlossary} />
                         </p>
                         <button className="mt-4 text-xs font-bold bg-blue-50 text-blue-600 px-4 py-2 rounded-full border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center gap-2">
-                            Voir l'analyse <i className="fa-solid fa-arrow-right"></i>
+                            Voir l'analyse juridique <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                 );
+
                 const CardContent = () => (
                     <div className={`relative ${isLeft ? 'pl-12' : 'pr-12'} flex ${isLeft ? 'justify-start' : 'justify-end'}`}>
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 w-full max-w-sm group-hover:shadow-lg group-hover:border-blue-300 group-hover:-translate-y-1 transition-all">
@@ -566,6 +566,7 @@
                         </div>
                     </div>
                 );
+
                 return (
                     <div className="relative flex items-center justify-between w-full mb-16 md:mb-24 cursor-pointer group fade-in" onClick={() => setSelectedStep(step)}>
                         <div className="w-5/12">{isLeft ? <TextContent /> : <CardContent />}</div>
@@ -583,11 +584,11 @@
                         <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-400 via-slate-900 to-black"></div>
                         <div className="relative max-w-4xl mx-auto z-10">
                             <div className="inline-block mb-4 px-4 py-1 rounded-full bg-blue-600/30 border border-blue-500/50 text-blue-200 text-sm font-semibold">
-                                Analyse du marché britannique (2026)
+                                Importation dans un Pays Tiers
                             </div>
                             <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
                                 Export Agroalimentaire<br/>
-                                <span className="text-blue-400">Savoie <i className="fa-solid fa-arrow-right mx-2 text-2xl"></i> Royaume-Uni</span>
+                                <span className="text-blue-400">UE <i className="fa-solid fa-arrow-right mx-2 text-2xl"></i> Royaume-Uni</span>
                             </h1>
                             <p className="text-slate-400 text-lg max-w-2xl mx-auto">
                                 Séquençage détaillé des formalités depuis l'implémentation totale du Border Target Operating Model (<TextWithGlossaryLinks text="BTOM" onNavigate={onNavigateGlossary} />) et du système <TextWithGlossaryLinks text="IPAFFS" onNavigate={onNavigateGlossary} />.
@@ -595,14 +596,13 @@
                         </div>
                     </div>
                     
-                    {/* Le graphique des probabilités restauré ! */}
                     <div className="w-full bg-white border-b border-slate-200 py-12 shadow-sm relative overflow-hidden">
                         <div className="max-w-6xl mx-auto px-4">
                             <div className="text-center mb-10">
                                 <h2 className="text-3xl font-bold text-slate-800 flex items-center justify-center gap-3">
-                                    <i className="fa-solid fa-chart-simple text-blue-600"></i> Probabilité de Contrôle Physique (BCP)
+                                    <i className="fa-solid fa-chart-simple text-blue-600"></i> Probabilité de Contrôle Physique en Douane (BCP)
                                 </h2>
-                                <p className="text-slate-500 mt-2">Corrélation entre la classification BTOM de vos produits et le risque d'inspection douanière</p>
+                                <p className="text-slate-500 mt-2">Corrélation entre la classification BTOM des denrées alimentaires et le risque d'inspection aux frontières</p>
                             </div>
                             <div className="flex items-end justify-center h-80 gap-4 md:gap-16 relative">
                                 <div className="absolute inset-0 w-full h-full pointer-events-none flex flex-col justify-between text-xs text-slate-300 z-0 px-4 md:px-20">
@@ -633,7 +633,6 @@
                         </div>
                     </div>
                     
-                    {/* Les cartes de niveaux de risque BTOM restaurées ! */}
                     <div className="max-w-6xl mx-auto px-4 mt-16 mb-20">
                         <div className="grid md:grid-cols-3 gap-6">
                             {ukBtomLevels.map((level, idx) => {
@@ -664,7 +663,7 @@
                     <main className="max-w-6xl mx-auto px-4 mb-20">
                         <div className="text-center mb-10">
                             <h2 className="text-4xl font-bold text-slate-800 mb-4">Séquençage du Flux Documentaire</h2>
-                            <p className="text-slate-500 text-lg max-w-2xl mx-auto mb-8">Une chronologie opérationnelle pour garantir la conformité douanière de vos expéditions. Cliquez sur les termes violets ou les cartes pour plus de détails.</p>
+                            <p className="text-slate-500 text-lg max-w-2xl mx-auto mb-8">La chronologie opérationnelle stricte pour exporter vers la Grande-Bretagne. Cliquez sur les termes violets ou les cartes pour les analyses juridiques.</p>
                             <FilterBar />
                         </div>
                         <div className="relative py-8 min-h-[500px]">
@@ -677,7 +676,7 @@
                                 ) : (<div className="text-center py-20 text-slate-400 italic">Aucune étape ne correspond à ce filtre.</div>)}
                             </div>
                             
-                            {/* Version Mobile (Simplifiée) restaurée */}
+                            {/* Version Mobile */}
                             <div className="md:hidden space-y-8 pl-6 border-l-2 border-slate-200 ml-4">
                                 {filteredData.map((step, index) => (
                                     <div key={step.id} className="relative cursor-pointer" onClick={() => setSelectedStep(step)}>
@@ -685,7 +684,7 @@
                                         <div className="text-xs font-bold text-slate-400 uppercase mb-1">{step.time}</div>
                                         <h3 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h3>
                                         <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
-                                            <div className="text-blue-600 text-sm font-bold mb-2">Voir l'analyse <i className="fa-solid fa-arrow-right ml-1"></i></div>
+                                            <div className="text-blue-600 text-sm font-bold mb-2">Voir l'analyse juridique <i className="fa-solid fa-arrow-right ml-1"></i></div>
                                             <div className="text-xs text-slate-500">{step.details}</div>
                                         </div>
                                     </div>
@@ -697,43 +696,43 @@
             );
         };
 
-        // --- PAGE 2: SCHENGEN ---
-        const SchengenPage = ({ setSelectedStep, onNavigateGlossary }) => {
+        // --- PAGE 2: EUROPE / MARCHE UNIQUE ---
+        const EuropePage = ({ setSelectedStep, onNavigateGlossary }) => {
             return (
                 <div className="animate-fade-in pb-20">
                     <div className="bg-slate-800 text-white py-12 px-4 shadow-xl text-center relative overflow-hidden mb-16">
-                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-400 via-blue-900 to-black"></div>
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-400 via-blue-900 to-black"></div>
                         <div className="relative max-w-4xl mx-auto z-10">
-                            <div className="inline-block mb-4 px-4 py-1 rounded-full bg-yellow-400/20 border border-yellow-400/50 text-yellow-200 text-sm font-semibold">Distinction Juridique</div>
-                            <h1 className="text-3xl md:text-5xl font-bold mb-6">Espace Schengen & UE</h1>
-                            <p className="text-slate-300 text-lg max-w-2xl mx-auto">La différence fondamentale entre la libre circulation (Union Douanière) et les pays tiers membres de Schengen.</p>
+                            <div className="inline-block mb-4 px-4 py-1 rounded-full bg-emerald-400/20 border border-emerald-400/50 text-emerald-200 text-sm font-semibold">Distinction Fondamentale à l'Export</div>
+                            <h1 className="text-3xl md:text-5xl font-bold mb-6">Marché Unique vs Pays Tiers</h1>
+                            <p className="text-slate-300 text-lg max-w-2xl mx-auto">La différence cruciale entre l'Union Douanière de l'UE (libre circulation des marchandises) et l'AELE (États européens avec frontières douanières).</p>
                         </div>
                     </div>
                     
                     <div className="max-w-6xl mx-auto px-4">
                         <div className="grid md:grid-cols-2 gap-8 mb-16">
                             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl shadow-sm">
-                                <h3 className="text-xl font-bold text-blue-900 mb-2"><i className="fa-solid fa-star text-yellow-500 mr-2"></i> Zone A : Union Douanière (UE)</h3>
-                                <p className="text-blue-800 text-sm mb-4 font-semibold">Allemagne, Italie, Espagne, Benelux...</p>
+                                <h3 className="text-xl font-bold text-blue-900 mb-2"><i className="fa-solid fa-star text-yellow-500 mr-2"></i> Zone A : Union Douanière & Marché Unique</h3>
+                                <p className="text-blue-800 text-sm mb-4 font-semibold">Les 27 États de l'UE (Allemagne, Italie, Espagne...)</p>
                                 <ul className="space-y-2 text-sm text-blue-700">
                                     <li><i className="fa-solid fa-check mr-2"></i> Libre circulation totale des marchandises</li>
-                                    <li><i className="fa-solid fa-check mr-2"></i> Absence de déclarations douanières (<TextWithGlossaryLinks text="EMEBI" onNavigate={onNavigateGlossary} /> uniquement)</li>
-                                    <li><i className="fa-solid fa-check mr-2"></i> Reconnaissance mutuelle des agréments (<TextWithGlossaryLinks text="HACCP" onNavigate={onNavigateGlossary} />)</li>
+                                    <li><i className="fa-solid fa-check mr-2"></i> Aucune douane, aucun droit à payer</li>
+                                    <li><i className="fa-solid fa-check mr-2"></i> Reconnaissance mutuelle des normes (<TextWithGlossaryLinks text="HACCP" onNavigate={onNavigateGlossary} />)</li>
                                 </ul>
                             </div>
                             <div className="bg-slate-100 border-l-4 border-slate-600 p-6 rounded-r-xl shadow-sm">
-                                <h3 className="text-xl font-bold text-slate-900 mb-2"><i className="fa-solid fa-mountain text-slate-500 mr-2"></i> Zone B : Schengen non-UE</h3>
+                                <h3 className="text-xl font-bold text-slate-900 mb-2"><i className="fa-solid fa-mountain text-slate-500 mr-2"></i> Zone B : AELE (Pays Tiers européens)</h3>
                                 <p className="text-slate-800 text-sm mb-4 font-semibold">Suisse, Norvège, Islande, Liechtenstein</p>
                                 <ul className="space-y-2 text-sm text-slate-700">
-                                    <li><i className="fa-solid fa-xmark mr-2 text-red-500"></i> Frontière douanière active (Droits et Taxes applicables)</li>
-                                    <li><i className="fa-solid fa-file-contract mr-2"></i> Déclarations d'exportation (<TextWithGlossaryLinks text="DAE" onNavigate={onNavigateGlossary} />) obligatoires</li>
-                                    <li><i className="fa-solid fa-road mr-2"></i> Régime de transit douanier (<TextWithGlossaryLinks text="T1" onNavigate={onNavigateGlossary} /> / <TextWithGlossaryLinks text="NSTI" onNavigate={onNavigateGlossary} />)</li>
+                                    <li><i className="fa-solid fa-xmark mr-2 text-red-500"></i> Ces pays sont dans l'espace Schengen pour les voyageurs, PAS pour les marchandises !</li>
+                                    <li><i className="fa-solid fa-file-contract mr-2"></i> Dédouanement complet (<TextWithGlossaryLinks text="DAE" onNavigate={onNavigateGlossary} />) obligatoire</li>
+                                    <li><i className="fa-solid fa-coins mr-2"></i> Droits de douane applicables à l'importation</li>
                                 </ul>
                             </div>
                         </div>
                         
                         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-                            {schengenData.map((item, idx) => (
+                            {europeData.map((item, idx) => (
                                 <div key={idx} onClick={() => setSelectedStep(item)} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hover:shadow-xl hover:border-blue-400 hover:-translate-y-2 transition-all cursor-pointer group flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl ${item.type === 'ue' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-600'}`}><i className={`fa-solid ${item.icon}`}></i></div>
@@ -745,7 +744,6 @@
                                     <p className="text-slate-600 mb-6 flex-grow leading-relaxed">
                                         <TextWithGlossaryLinks text={item.details} onNavigate={onNavigateGlossary} />
                                     </p>
-                                    
                                     <div className="mt-auto w-full bg-slate-50 border border-slate-200 text-center py-3 rounded-lg text-sm font-bold text-slate-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm flex items-center justify-center gap-2">
                                         Voir l'analyse détaillée <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                                     </div>
@@ -764,14 +762,14 @@
                     <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_bottom_right,_var(--tw-gradient-stops))] from-amber-500 via-slate-900 to-black"></div>
                     <div className="relative max-w-4xl mx-auto z-10">
                         <div className="inline-block mb-4 px-4 py-1 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-200 text-sm font-semibold">
-                            Synthèse Opérationnelle
+                            Analyse Comparative pour Bo'Nature
                         </div>
                         <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-                            Recommandations Stratégiques<br/>
-                            <span className="text-amber-500">Pour Bo'Nature</span>
+                            Synthèse & Recommandations<br/>
+                            <span className="text-amber-500">Stratégie Export</span>
                         </h1>
                         <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-                            Matrice d'aide à la décision pour le développement commercial international des produits savoyards.
+                            Matrice d'aide à la décision réglementaire pour arbitrer les axes de développement commercial à l'international.
                         </p>
                     </div>
                 </div>
@@ -782,11 +780,11 @@
                             <thead>
                                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm uppercase">
                                     <th className="p-4">Marché Cible</th>
-                                    <th className="p-4">Complexité</th>
-                                    <th className="p-4">Charge Admin.</th>
-                                    <th className="p-4">Logistique</th>
-                                    <th className="p-4">Avantages (Pros)</th>
-                                    <th className="p-4">Contraintes (Cons)</th>
+                                    <th className="p-4">Complexité Douanière</th>
+                                    <th className="p-4">Coûts Administratifs</th>
+                                    <th className="p-4">Délais Frontières</th>
+                                    <th className="p-4">Avantages Commerciaux</th>
+                                    <th className="p-4">Contraintes Réglementaires</th>
                                 </tr>
                             </thead>
                             <tbody className="text-sm">
@@ -804,17 +802,16 @@
                         </table>
                     </div>
                     
-                    {/* Les recommandations détaillées restaurées ! */}
                     <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg">
-                        <h3 className="text-2xl font-bold text-slate-800 mb-8 text-center">Plan d'Action Séquentiel Recommandé</h3>
+                        <h3 className="text-2xl font-bold text-slate-800 mb-8 text-center">Plan d'Action Séquentiel Recommandé pour la Startup</h3>
                         <div className="grid md:grid-cols-3 gap-8">
                             <div className="p-6 bg-slate-50 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden group">
                                 <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
                                 <div className="text-center mb-4">
                                     <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">1</div>
                                 </div>
-                                <h4 className="font-bold text-center text-slate-800 mb-3 text-lg">Pénétration du marché intracommunautaire</h4>
-                                <p className="text-sm text-slate-600 text-justify leading-relaxed">Privilégier une expansion initiale vers les marchés de l'Union Européenne (ex: Allemagne, Benelux). L'absence de barrières douanières et la reconnaissance mutuelle des normes sanitaires permettent une commercialisation fluide et à moindre coût. Phase idéale pour tester et valider la traction commerciale à l'international.</p>
+                                <h4 className="font-bold text-center text-slate-800 mb-3 text-lg">Pénétration du Marché Unique (UE)</h4>
+                                <p className="text-sm text-slate-600 text-justify leading-relaxed">Privilégier une expansion initiale vers les pays membres de l'Union Douanière (ex: Allemagne, Italie). L'absence de barrières douanières et la reconnaissance mutuelle des normes sanitaires (HACCP) permettent une commercialisation fluide et sans frais cachés. C'est la phase idéale pour tester le produit à l'international à moindre risque.</p>
                             </div>
                             
                             <div className="p-6 bg-slate-50 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden">
@@ -822,8 +819,8 @@
                                 <div className="text-center mb-4">
                                     <div className="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">2</div>
                                 </div>
-                                <h4 className="font-bold text-center text-slate-800 mb-3 text-lg">Déploiement Helvetique stratégique</h4>
-                                <p className="text-sm text-slate-600 text-justify leading-relaxed">Exploiter la proximité géographique et le fort pouvoir d'achat du marché suisse ou norvégien. Bien que nécessitant l'assimilation de formalités douanières d'exportation et de transit, l'harmonisation partielle des normes et la forte demande justifient cet investissement administratif de palier.</p>
+                                <h4 className="font-bold text-center text-slate-800 mb-3 text-lg">Déploiement Stratégique (Suisse)</h4>
+                                <p className="text-sm text-slate-600 text-justify leading-relaxed">Dans un second temps, exploiter le marché suisse. Bien que nécessitant l'assimilation des formalités douanières d'exportation (DAE), le marché est géographiquement proche et offre un pouvoir d'achat supérieur. Cet investissement administratif préparera l'entreprise aux exigences douanières des autres Pays Tiers.</p>
                             </div>
                             
                             <div className="p-6 bg-slate-50 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden">
@@ -831,8 +828,8 @@
                                 <div className="text-center mb-4">
                                     <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">3</div>
                                 </div>
-                                <h4 className="font-bold text-center text-slate-800 mb-3 text-lg">Stratégie de massification UK</h4>
-                                <p className="text-sm text-slate-600 text-justify leading-relaxed">Postposer l'entrée sur le marché britannique ou privilégier un modèle de distribution indirecte (B2B via un importateur). Les contraintes structurelles du BTOM génèrent des coûts fixes élevés, rendant le micro-export non viable. Une massification des flux est indispensable.</p>
+                                <h4 className="font-bold text-center text-slate-800 mb-3 text-lg">Massification UK Post-Brexit</h4>
+                                <p className="text-sm text-slate-600 text-justify leading-relaxed">Repousser l'entrée sur le marché britannique ou privilégier un modèle de distribution B2B unique. Les contraintes du modèle BTOM génèrent des coûts vétérinaires (EHC) et administratifs élevés par expédition. L'envoi de "petits colis" (B2C) vers le Royaume-Uni n'est plus rentable ; une massification des flux (envoi par palettes complètes) est devenue indispensable.</p>
                             </div>
                         </div>
                     </div>
@@ -843,7 +840,7 @@
         // --- PAGE 4: GLOSSAIRE ---
         const GlossaryPage = ({ searchQuery }) => {
             const [searchTerm, setSearchTerm] = useState('');
-            
+
             useEffect(() => {
                 if (searchQuery) {
                     setSearchTerm(searchQuery);
@@ -871,7 +868,7 @@
                             <h1 className="text-3xl md:text-5xl font-bold mb-8">Le <span className="text-purple-400">Glossaire</span> de l'Exportateur</h1>
                             <div className="relative max-w-lg mx-auto">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i className="fa-solid fa-magnifying-glass text-slate-400"></i></div>
-                                <input type="text" placeholder="Rechercher un terme (ex: EORI)..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-11 pr-4 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white/20 transition-all shadow-inner backdrop-blur-sm" />
+                                <input type="text" placeholder="Rechercher un terme (ex: EORI, IPAFFS)..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-11 pr-4 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white/20 transition-all shadow-inner backdrop-blur-sm" />
                                 {searchTerm && (
                                     <button onClick={() => setSearchTerm('')} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-white transition-colors"><i className="fa-solid fa-xmark"></i></button>
                                 )}
@@ -926,13 +923,13 @@
                     <Navigation activeTab={activeTab} setTab={handleTabChange} />
                     
                     {activeTab === 'home' && <HomePage setTab={handleTabChange} />}
+                    {activeTab === 'europe' && <EuropePage setSelectedStep={setSelectedStep} onNavigateGlossary={handleNavigateGlossary} />}
                     {activeTab === 'uk' && <UKPage setSelectedStep={setSelectedStep} onNavigateGlossary={handleNavigateGlossary} />}
-                    {activeTab === 'schengen' && <SchengenPage setSelectedStep={setSelectedStep} onNavigateGlossary={handleNavigateGlossary} />}
                     {activeTab === 'strategy' && <StrategyPage />}
                     {activeTab === 'glossary' && <GlossaryPage searchQuery={glossarySearchQuery} />}
                     
                     <footer className="bg-slate-900 text-slate-400 mt-0 py-12 text-center border-t border-slate-800">
-                        <div className="max-w-4xl mx-auto px-4"><p className="font-bold text-white mb-2">Référentiel Stratégique & Réglementaire 2026</p><p className="text-sm">Projet Étudiant</p></div>
+                        <div className="max-w-4xl mx-auto px-4"><p className="font-bold text-white mb-2">Référentiel Stratégique & Réglementaire 2026</p><p className="text-sm">Projet Étudiant - Analyse Export Bo'Nature</p></div>
                     </footer>
                     
                     <Modal data={selectedStep} onClose={() => setSelectedStep(null)} onNavigateGlossary={handleNavigateGlossary} />
