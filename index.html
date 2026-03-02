@@ -244,7 +244,7 @@
                 category: "TRANSIT LOGISTIQUE",
                 title: "Régime de Transit (NSTI / T1)",
                 details: "Procédure permettant de traverser un pays tiers (ex: la Suisse) sans y payer les taxes.",
-                analysis: "Si vous expédiez une marchandise depuis la France vers l'Italie (UE à UE), mais que le camion traverse la Suisse (Pays Tiers), il faut suspendre les droits de douane. L'exportateur ou le transporteur émet un document T1 via le système NSTI. Le camion traverse la Suisse sous douane et "solde" son T1 en rentrant en Italie.",
+                analysis: "Si vous expédiez une marchandise depuis la France vers l'Italie (UE à UE), mais que le camion traverse la Suisse (Pays Tiers), il faut suspendre les droits de douane. L'exportateur ou le transporteur émet un document T1 via le système NSTI. Le camion traverse la Suisse sous douane et 'solde' son T1 en rentrant en Italie.",
                 docs: ["Document de Transit T1 (avec MRN)"],
                 warning: "L'émission d'un T1 nécessite une garantie financière bloquée en douane. On passe généralement par un commissionnaire en douane (RDE).",
                 icon: "fa-truck-fast"
@@ -310,8 +310,8 @@
             { term: "T1", fullName: "Document de Transit Externe", category: "Transport", definition: "Régime douanier permettant à une marchandise de traverser un territoire (ou d'y circuler avant dédouanement) en suspendant le paiement des droits et taxes.", icon: "fa-route", color: "amber" },
             { term: "HACCP", fullName: "Hazard Analysis Critical Control Point", category: "Réglementation", definition: "Méthode de maîtrise de la sécurité sanitaire des denrées alimentaires, socle de la réglementation européenne (Paquet Hygiène).", icon: "fa-hand-sparkles", color: "green" },
             { term: "Delta IE", fullName: "Delta Import-Export", category: "Douane", definition: "Le nouveau système informatique des douanes françaises pour le dédouanement (remplaçant l'ancien système Delta G).", icon: "fa-laptop-code", color: "blue" },
-            { term: "DAE", fullName: "Document d'Accompagnement Export", category: "Douane", definition: "Document prouvant que la marchandise a bien été déclarée en douane pour quitter le territoire de l'Union Européenne.", icon: "fa-file-export", color: "blue" }
-            { term: "ELO", fullName: "Enveloppe Logistique", category: "Transport", definition: "Fonctionnalité de la douane française (frontière intelligente) permettant de regrouper plusieurs déclarations douanières d'exportation sous un seul code-barres, lié à la plaque d'immatriculation du camion.", icon: "fa-envelope-open-text", color: "amber" },
+            { term: "DAE", fullName: "Document d'Accompagnement Export", category: "Douane", definition: "Document prouvant que la marchandise a bien été déclarée en douane pour quitter le territoire de l'Union Européenne.", icon: "fa-file-export", color: "blue" },
+            { term: "ELO", fullName: "Enveloppe Logistique", category: "Transport", definition: "Fonctionnalité de la douane française (frontière intelligente) permettant de regrouper plusieurs déclarations douanières d'exportation sous un seul code-barres, lié à la plaque d'immatriculation du camion.", icon: "fa-envelope-open-text", color: "amber" }
         ];
 
         // ==========================================
@@ -930,8 +930,11 @@
                     {activeTab === 'glossary' && <GlossaryPage searchQuery={glossarySearchQuery} />}
                     
                     <footer className="bg-slate-900 text-slate-400 mt-0 py-12 text-center border-t border-slate-800">
-                        <div className="max-w-4xl mx-auto px-4"><p className="font-bold text-white mb-2">Référentiel Stratégique & Réglementaire 2026</p><p className="text-sm">Projet Étudiant - Analyse Export Bo'Nature</p><p className="text-sm"Elsa LECONTE, Lina BAIO, Chloé BEAUME, Romane DE JESUS, Agathe PERRILLIAT-MERCEROZ, Camille BARONE, Kévin CELORO</p></div>
-                        
+                        <div className="max-w-4xl mx-auto px-4">
+                            <p className="font-bold text-white mb-2">Référentiel Stratégique & Réglementaire 2026</p>
+                            <p className="text-sm">Projet Étudiant - Analyse Export Bo'Nature</p>
+                            <p className="text-sm">Elsa LECONTE, Lina BAIO, Chloé BEAUME, Romane DE JESUS, Agathe PERRILLIAT-MERCEROZ, Camille BARONE, Kévin CELORO</p>
+                        </div>
                     </footer>
                     
                     <Modal data={selectedStep} onClose={() => setSelectedStep(null)} onNavigateGlossary={handleNavigateGlossary} />
